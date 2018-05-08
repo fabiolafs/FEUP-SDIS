@@ -29,19 +29,22 @@ public class JavaSSLServer {
             System.out.println("SSL ServerSocket started");
             System.out.println(sslServerSocket.toString());
              
+            while(true) {
             Socket socket = sslServerSocket.accept();
             System.out.println("ServerSocket accepted");
              
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             
             try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
-                String line;
-                while((line = bufferedReader.readLine()) != null){
+                String line = null;
+                //while((line = bufferedReader.readLine()) != null){
+                		line = bufferedReader.readLine();
                     System.out.println(line);
                     out.println(line);
-                }
+                //}
             }
             System.out.println("Closed");
+            }
              
         } catch (IOException ex) {
             Logger.getLogger(JavaSSLServer.class.getName()).log(Level.SEVERE, null, ex);
