@@ -23,6 +23,7 @@ public class JavaSSLClient {
         try {
             Socket socket = sslSocketFactory.createSocket("localhost", port);
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+            
             try (BufferedReader bufferedReader =  new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
             	
                 Scanner scanner = new Scanner(System.in);

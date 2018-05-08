@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.net.ssl.SSLServerSocketFactory;
@@ -15,10 +16,12 @@ import javax.net.ssl.SSLServerSocketFactory;
 public class JavaSSLServer {
      
     static final int port = 8000;
- 
-    public static void main(String[] args) {
-         
+    //static ArrayList<JavaSSLServerListener> acceptSocket = new ArrayList<JavaSSLServerListener>();
 
+    public static void main(String[] args) {
+        
+    		Socket socket;
+    		
 		System.setProperty("javax.net.ssl.keyStore","mykeystore");
 		System.setProperty("javax.net.ssl.keyStorePassword","1234567890");
 		
@@ -30,20 +33,11 @@ public class JavaSSLServer {
             System.out.println(sslServerSocket.toString());
              
             while(true) {
-            Socket socket = sslServerSocket.accept();
-            System.out.println("ServerSocket accepted");
-             
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            
-            try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
-                String line = null;
-                //while((line = bufferedReader.readLine()) != null){
-                		line = bufferedReader.readLine();
-                    System.out.println(line);
-                    out.println(line);
-                //}
-            }
-            System.out.println("Closed");
+	            socket = sslServerSocket.accept();
+	            System.out.println("ServerSocket accepted");
+	            JavaSSLServerListener channel = new JavaSSLServerListener(socket);
+	            new Thread(channel).start();
+	            //acceptSocket.add(channel);
             }
              
         } catch (IOException ex) {
