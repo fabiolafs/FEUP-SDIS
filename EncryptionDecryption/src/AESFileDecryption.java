@@ -13,35 +13,33 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class AESFileDecryption {
 	
-	public static void main(String[] args) throws Exception {
+	public void Decryption(String pass, String fileName) throws Exception {
 
-		String password = "javapapers";
+		String password = pass;
 
 		// reading the salt
 		// user should have secure mechanism to transfer the
 		// salt, iv and password to the recipient
-		FileInputStream saltFis = new FileInputStream("salt.enc");
+		FileInputStream saltFis = new FileInputStream(fileName + "_salt.enc");
 		byte[] salt = new byte[8];
 		saltFis.read(salt);
 		saltFis.close();
 
 		// reading the iv
-		FileInputStream ivFis = new FileInputStream("iv.enc");
+		FileInputStream ivFis = new FileInputStream(fileName + "_iv.enc");
 		byte[] iv = new byte[16];
 		ivFis.read(iv);
 		ivFis.close();
 
-		SecretKeyFactory factory = SecretKeyFactory
-				.getInstance("PBKDF2WithHmacSHA1");
-		KeySpec keySpec = new PBEKeySpec(password.toCharArray(), salt, 65536,
-				256);
+		SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+		KeySpec keySpec = new PBEKeySpec(password.toCharArray(), salt, 65536, 256);
 		SecretKey tmp = factory.generateSecret(keySpec);
 		SecretKey secret = new SecretKeySpec(tmp.getEncoded(), "AES");
 
 		// file decryption
 		Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
 		cipher.init(Cipher.DECRYPT_MODE, secret, new IvParameterSpec(iv));
-		FileInputStream fis = new FileInputStream("encryptedfile.des");
+		FileInputStream fis = new FileInputStream(fileName + "_encryptedfile.des");
 		FileOutputStream fos = new FileOutputStream("plainfile_decrypted.txt");
 		byte[] in = new byte[64];
 		int read;

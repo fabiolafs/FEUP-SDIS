@@ -15,16 +15,20 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
 public class AESFileEncryption {
-	public static void main(String[] args) throws Exception {
+	
+	
+	public AESFileEncryption(){}
+	
+	public void Encryption(String pass, String fileName) throws Exception {
 
 		// file to be encrypted
-		FileInputStream inFile = new FileInputStream("plainfile.txt");
+		FileInputStream inFile = new FileInputStream(fileName);
 
 		// encrypted file
-		FileOutputStream outFile = new FileOutputStream("encryptedfile.des");
+		FileOutputStream outFile = new FileOutputStream(fileName + "_encryptedfile.des");
 
 		// password to encrypt the file
-		String password = "javapapers";
+		String password = pass;
 
 		// password, iv and salt should be transferred to the other end
 		// in a secure manner
@@ -36,7 +40,7 @@ public class AESFileEncryption {
 		byte[] salt = new byte[8];
 		SecureRandom secureRandom = new SecureRandom();
 		secureRandom.nextBytes(salt);
-		FileOutputStream saltOutFile = new FileOutputStream("salt.enc");
+		FileOutputStream saltOutFile = new FileOutputStream(fileName + "_salt.enc");
 		saltOutFile.write(salt);
 		saltOutFile.close();
 
@@ -56,7 +60,7 @@ public class AESFileEncryption {
 		// secure
 		// used while initializing the cipher
 		// file to store the iv
-		FileOutputStream ivOutFile = new FileOutputStream("iv.enc");
+		FileOutputStream ivOutFile = new FileOutputStream(fileName + "_iv.enc");
 		byte[] iv = params.getParameterSpec(IvParameterSpec.class).getIV();
 		ivOutFile.write(iv);
 		ivOutFile.close();
